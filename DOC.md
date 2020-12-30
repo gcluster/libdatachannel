@@ -10,7 +10,7 @@ All functions can return the following negative error codes:
 - `RTC_ERR_NOT_AVAIL`: an element is not available at the moment
 - `RTC_ERR_TOO_SMALL`: a user-provided buffer is too small
 
-All functions taking pointers as arguments need the memory to be accessible until the call returns, but it can be safely discarded afterwards.
+All functions taking pointers as arguments (excepted the opaque user pointer) need the memory to be accessible until the call returns, but it can be safely discarded afterwards.
 
 ### Common
 
@@ -26,6 +26,10 @@ Arguments:
 
 `cb` must have the following signature:
 `void myLogCallback(rtcLogLevel level, const char *message)`
+
+Arguments:
+- `level`: the log level for the current message. It will be one of the following: `RTC_LOG_FATAL`, `RTC_LOG_ERROR`, `RTC_LOG_WARNING`, `RTC_LOG_INFO`, `RTC_LOG_DEBUG`, `RTC_LOG_VERBOSE`.
+- `message`: a null-terminated string containing the log message
 
 #### rtcPreload
 
@@ -65,6 +69,7 @@ int rtcCreatePeerConnection(const rtcConfiguration *config)
 typedef struct {
 	const char **iceServers;
 	int iceServersCount;
+	bool enableIceTcp;
 	uint16_t portRangeBegin;
 	uint16_t portRangeEnd;
 } rtcConfiguration;
@@ -76,6 +81,7 @@ Arguments:
 - `config`: the configuration structure, containing:
   - `iceServers` (optional): an array of pointers on null-terminated ice server URIs (NULL if unused)
   - `iceServersCount` (optional): number of URLs in the array pointed by `iceServers` (0 if unused)
+  - `enableIceTcp`: if true, generate TCP candidates for ICE (ignored with libjuice as ICE backend)
   - `portRangeBegin` (optional): first port (included) of the allowed local port range (0 if unused)
   - `portRangeEnd` (optional): last port (included) of the allowed local port (0 if unused)
 
