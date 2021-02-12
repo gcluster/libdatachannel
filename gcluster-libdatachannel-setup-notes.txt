@@ -1,0 +1,17 @@
+To get libdatachannels source, do this:
+
+1. as per the libdatachannel web page:
+  git clone https://github.com/paullouisageneau/libdatachannel.git
+  cd libdatachannel
+  git submodule update --init --recursive
+
+2. run cmake
+  cmake -B build-win -G "Visual Studio 16 2019" -A x64 -DOPENSSL_ROOT_DIR:PATH="c:\projects\hila\ext\openssl"
+
+3. open build-win\libdatachannel.sln, for Debug and RelWithDbgInfo configurations:
+  - fix openssl library link settings
+  - add crypt32.lib to additional dependencies for libdatachannel
+  - make all include paths relative to $(ProjectDir) 
+  - remove other projects than datachannel, datachannel-client, juice-static, srtp2, usrstcp from the solution
+
+
