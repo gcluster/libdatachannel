@@ -1,8 +1,9 @@
 To get libdatachannels source, do this:
 
 1. as per the libdatachannel web page:
-  git clone https://github.com/paullouisageneau/libdatachannel.git
+  git clone https://github.com/gcluster/libdatachannel.git
   cd libdatachannel
+  git checkout v0.11-gcluster-2021.1
   git submodule update --init --recursive
 
 2. run cmake
