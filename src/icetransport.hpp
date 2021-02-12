@@ -78,8 +78,8 @@ private:
 
 	Description::Role mRole;
 	string mMid;
-	std::chrono::milliseconds mTrickleTimeout;
-	std::atomic<GatheringState> mGatheringState;
+	std::chrono::milliseconds mTrickleTimeout = std::chrono::seconds(30);
+	std::atomic<GatheringState> mGatheringState = GatheringState::New;
 
 	candidate_callback mCandidateCallback;
 	gathering_state_callback mGatheringStateChangeCallback;

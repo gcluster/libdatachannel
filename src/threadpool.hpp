@@ -52,7 +52,7 @@ public:
 
 	int count() const;
 	void spawn(int count = 1);
-	void join();
+	static void join();
 	void run();
 	bool runOne();
 
@@ -64,15 +64,16 @@ public:
 
 	template <class F, class... Args>
 	auto schedule(clock::time_point time, F &&f, Args &&...args) -> invoke_future_t<F, Args...>;
+	~ThreadPool();
 
 protected:
 	ThreadPool();
-	~ThreadPool();
+	
 
 	std::function<void()> dequeue(); // returns null function if joining
 
 	std::vector<std::thread> mWorkers;
-	std::atomic<bool> mJoining = false;
+	static std::atomic<bool> mJoining;
 
 	struct Task {
 		clock::time_point time;

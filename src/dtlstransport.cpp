@@ -24,7 +24,9 @@
 #include <exception>
 #include <iostream>
 
+
 #if !USE_GNUTLS
+extern "C" void OPENSSL_thread_stop(void);
 #ifdef _WIN32
 #include <winsock2.h> // for timeval
 #else
@@ -522,6 +524,10 @@ void DtlsTransport::runRecvLoop() {
 		PLOG_ERROR << "DTLS handshake failed";
 		changeState(State::Failed);
 	}
+#if !USE_GNUTLS
+	OPENSSL_thread_stop();
+#endif
+
 }
 
 int DtlsTransport::CertificateCallback(int /*preverify_ok*/, X509_STORE_CTX *ctx) {

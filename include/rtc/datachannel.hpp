@@ -101,6 +101,7 @@ private:
 	void processOpenMessage(message_ptr message) override;
 
 	friend class PeerConnection;
+	std::mutex mMutex;
 };
 
 template <typename Buffer> std::pair<const byte *, size_t> to_bytes(const Buffer &buf) {

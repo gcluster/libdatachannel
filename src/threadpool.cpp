@@ -22,9 +22,13 @@
 
 namespace {
 	void joinThreadPoolInstance() {
-		rtc::ThreadPool::Instance().join();
+		rtc::ThreadPool::join();
+		delete& rtc::ThreadPool::Instance();
 	}
 }
+
+
+std::atomic<bool> rtc::ThreadPool::mJoining = false;
 
 namespace rtc {
 
@@ -52,19 +56,27 @@ void ThreadPool::spawn(int count) {
 }
 
 void ThreadPool::join() {
-	std::unique_lock lock(mWorkersMutex);
+	if (mJoining)
+		return;
+	std::unique_lock lock(Instance().mWorkersMutex);
 	mJoining = true;
-	mCondition.notify_all();
+	Instance().mCondition.notify_all();
 
-	for (auto &w : mWorkers)
+	for (auto &w : Instance().mWorkers)
 		w.join();
 
-	mWorkers.clear();
+	Instance().mWorkers.clear();
 }
 
+#if !USE_GNUTLS	
+extern "C" void OPENSSL_thread_stop(void);
+#endif
 void ThreadPool::run() {
 	while (runOne()) {
 	}
+#if !USE_GNUTLS	
+	OPENSSL_thread_stop();	
+#endif
 }
 
 bool ThreadPool::runOne() {

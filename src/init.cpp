@@ -72,7 +72,7 @@ void doInit() {
 void doCleanup() {
 	PLOG_DEBUG << "Global cleanup";
 
-	ThreadPool::Instance().join();
+	ThreadPool::join();
 	CleanupCertificateCache();
 
 	SctpTransport::Cleanup();
